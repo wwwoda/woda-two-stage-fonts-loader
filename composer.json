@@ -1,0 +1,16 @@
+{
+  "name": "woda/wp-two-stage-font-loader",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Mondok",
+      "email": "david@woda.at"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Woda\\WordPress\\FontsLoader\\": "src/"
+    }
+  }
+}
