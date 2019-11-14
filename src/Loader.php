@@ -50,7 +50,6 @@ final class Loader
         );
     }
 
-
     private static function getPreloadLinkTags(array $fonts = []): string
     {
         $preloadLinkTagsString = '';
@@ -59,14 +58,14 @@ final class Loader
                 '<link rel="preload" href="%s/%s.%s" as="font" type="font/%3$s" crossorigin>',
                 self::getFontsUrl(),
                 $font['filename'],
-                self::getPrioritFontExtension($font['extensions'])
+                self::getPriorityFontExtension($font['extensions'])
             );
             $preloadLinkTagsString .= "\n";
         }
         return $preloadLinkTagsString;
     }
 
-    private static function getPrioritFontExtension(array $extensions = []): string
+    private static function getPriorityFontExtension(array $extensions = []): string
     {
         if (in_array('woff2', $extensions, true)) {
             return 'woff2';
@@ -74,6 +73,48 @@ final class Loader
             return 'woff';
         }
         return 'ttf';
+    }
+
+    private static function getFontFaceCssCode(array $fonts): string
+    {
+        $fontFacesString = '';
+        foreach ($fonts as $font) {
+            $fontFacesString .= sprintf(
+                "@font-face {\n    font-family: '%s';\n    src: %s;\n    font-weight: %s;%s\n    font-display: swap;\n}\n",
+                $font['name'],
+                self::getFontSourceCssCode($font),
+                $font['weight'],
+                $font['italic'] === true ? "\n    font-style: italic;" : ''
+            );
+        }
+        return $fontFacesString;
+    }
+
+    private static function getFontSourceCssCode(array $font): string
+    {
+        $fontSrcString = '';
+        $extensionsCount = count($font['extensions']);
+        foreach ($font['extensions'] as $index => $ext) {
+            $fontSrcString .= sprintf(
+                'url("%1$s/%2$s.%3$s") format("%3$s")%4$s',
+                self::getFontsUrl(),
+                $font['filename'],
+                $ext,
+                $index < $extensionsCount - 1 ? ', ' : ''
+            );
+        }
+        return $fontSrcString;
+    }
+
+    private static function getScriptTemplate(): string
+    {
+        return "<script>(function () {%s if (!window.Promise || sessionStorage." . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . "=true;}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
+    }
+
+    private static function getFontFaceObserverVendorScript(): string
+    {
+        $fontsFaceObserverScriptPath = dirname(__DIR__) . '/assets/fontfaceobserver.standalone.js';
+        return file_get_contents($fontsFaceObserverScriptPath);
     }
 
     private static function getFontFaceObserverJavaScriptCode(array $fonts, int $stage = 1): string
@@ -102,37 +143,6 @@ final class Loader
         return rtrim($checks, ',');
     }
 
-    private static function getFontFaceCssCode(array $fonts): string
-    {
-        $fontFacesString = '';
-        foreach ($fonts as $font) {
-            $fontFacesString .= sprintf(
-                "@font-face {\n    font-family: '%s';\n    src: %s;\n    font-weight: %s;%s\n    font-display: swap;\n}\n",
-                $font['name'],
-                self::getCssFontSourceString($font),
-                $font['weight'],
-                $font['italic'] ? "\n    font-style: italic;" : ''
-            );
-        }
-        return $fontFacesString;
-    }
-
-    private static function getCssFontSourceString(array $font): string
-    {
-        $fontSrcString = '';
-        $extensionsCount = count($font['extensions']);
-        foreach ($font['extensions'] as $index => $ext) {
-            $fontSrcString .= sprintf(
-                'url("%1$s/%2$s.%3$s") format("%3$s")%4$s',
-                self::getFontsUrl(),
-                $font['filename'],
-                $ext,
-                $index < $extensionsCount - 1 ? ', ' : ''
-            );
-        }
-        return $fontSrcString;
-    }
-
     private static function getStageOneFonts(): array
     {
         return self::$settings['stage1'] ?? [];
@@ -151,11 +161,6 @@ final class Loader
     private static function getFontsUrl(): string
     {
         return self::$settings['fontsUrl'];
-    }
-
-    private static function getScriptTemplate(): string
-    {
-        return "<script>(function () {%s if (!window.Promise || sessionStorage." . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . "=true;}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
     }
 
     private static function getStageClasses(): array
@@ -204,12 +209,6 @@ final class Loader
         }
 
         return $check;
-    }
-
-    private static function getFontFaceObserverVendorScript(): string
-    {
-        $fontsFaceObserverScriptPath = dirname(__DIR__) . '/assets/fontfaceobserver.standalone.js';
-        return file_get_contents($fontsFaceObserverScriptPath);
     }
 
     private static function checkFontSetting(array $font): bool
