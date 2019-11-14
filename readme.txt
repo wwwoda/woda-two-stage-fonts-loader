@@ -7,7 +7,7 @@ Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin provides functions for developers to implement a performant two stage font loading strategy.
+This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.
 
 == Description ==
 

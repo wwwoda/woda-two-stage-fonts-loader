@@ -1,6 +1,6 @@
 {
   "name": "woda/wp-two-stage-font-loader",
-  "description": "This WordPress plugin provides functions for developers to implement a performant two stage font loading strategy.",
+  "description": "This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.",
   "keywords": [
     "wordpress",
     "plugin",
