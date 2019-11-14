@@ -1,16 +1,27 @@
 <?php
 /**
- * Plugin Name:     Woda Fonts Loader
- * Plugin URI:      PLUGIN SITE HERE
- * Description:     PLUGIN DESCRIPTION HERE
- * Author:          YOUR NAME HERE
- * Author URI:      YOUR SITE HERE
+ * Plugin Name:     Woda Two Stage Fonts Loader
+ * Plugin URI:      https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader
+ * Description:     This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.
+ * Author:          Woda
+ * Author URI:      https://www.woda.at
  * Text Domain:     woda-two-stage-fonts-loader
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         Woda_Fonts_Loader
+ * @package         Woda_Two_Stage-Fonts_Loader
  */
+
+// Copyright (c) 2019 Woda Digital OG. All rights reserved.
+//
+// Released under the GPL license
+// http://www.opensource.org/licenses/gpl-license.php
+//
+// **********************************************************************
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// **********************************************************************
 
 include_once 'vendor/autoload.php';
 
