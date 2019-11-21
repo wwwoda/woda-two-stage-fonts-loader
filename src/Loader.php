@@ -1,6 +1,6 @@
 <?php
 
-namespace Woda\WordPress\FontsLoader;
+namespace Woda\WordPress\TwoStageFontsLoader;
 
 final class Loader
 {

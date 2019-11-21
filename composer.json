@@ -4,7 +4,8 @@
   "keywords": [
     "wordpress",
     "plugin",
-    "performance"
+    "performance",
+    "fonts"
   ],
   "license": "GPLv2 or later",
   "homepage": "https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader",
@@ -16,11 +17,11 @@
     },
     {
       "name": "David Mondok",
-      "email": "david@woda.at",
+      "email": "david@woda.at"
     },
     {
       "name": "Wolfgang Schäfer",
-      "email": "wolfgang@woda.at",
+      "email": "wolfgang@woda.at"
     }
   ],
   "type": "wordpress-plugin",
@@ -31,7 +32,7 @@
   "require": {},
   "autoload": {
     "psr-4": {
-      "Woda\\WordPress\\FontsLoader\\": "src/"
+      "Woda\\WordPress\\TwoStageFontsLoader\\": "src/"
     }
   }
 }

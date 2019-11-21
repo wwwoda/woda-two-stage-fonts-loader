@@ -26,6 +26,6 @@
 include_once 'vendor/autoload.php';
 
 add_action('init', static function (): void {
-    $settings = apply_filters('woda_fonts_loader_settings', []);
-    Woda\WordPress\FontsLoader\Loader::register($settings);
+    $settings = apply_filters('woda_two_stage_fonts_loader_settings', []);
+    Woda\WordPress\TwoStageFontsLoader\Loader::register($settings);
 });

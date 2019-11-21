@@ -9,14 +9,14 @@ class ComposerStaticInita96896fb94d7cca5bcf712bb56366e64
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
-            'Woda\\WordPress\\FontsLoader\\' => 27,
+            'Woda\\WordPress\\TwoStageFontsLoader\\' => 35,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Woda\\WordPress\\FontsLoader\\' => 
+        'Woda\\WordPress\\TwoStageFontsLoader\\' => 
         array (
-            0 => __DIR__ . '/../woda-twosrcage-fonts-loader',
+            0 => __DIR__ . '/../..' . '/src',
         ),
     );
 
