@@ -25,7 +25,15 @@
 
 include_once 'vendor/autoload.php';
 
+use Puc_v4_Factory;
+
 add_action('init', static function (): void {
     $settings = apply_filters('woda_two_stage_fonts_loader_settings', []);
     Woda\WordPress\TwoStageFontsLoader\Loader::register($settings);
 });
+
+$pluginUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader/',
+    __FILE__,
+    'woda/wp-two-stage-font-loader'
+);
