@@ -37,3 +37,5 @@ $pluginUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
     __FILE__,
     'woda/wp-two-stage-font-loader'
 );
+
+$pluginUpdateChecker->setAuthentication('f08473ebba7ba75e904082d63b328367d5d227a3');
