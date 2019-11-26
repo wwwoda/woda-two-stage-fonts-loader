@@ -17,6 +17,9 @@ final class Loader
     public static $sessionsStorageVariable = 'fontsLoaded';
 
 
+    /**
+     * @param array|null $settings
+     */
     public static function register(?array $settings = []): void
     {
         self::$settings = $settings;
@@ -25,6 +28,9 @@ final class Loader
         }
     }
 
+    /**
+     *
+     */
     public static function renderFontsLoaderBlock(): void
     {
         self::renderPreloadLinksBlock();
@@ -32,16 +38,25 @@ final class Loader
         self::renderScriptBlock();
     }
 
+    /**
+     *
+     */
     private static function renderPreloadLinksBlock(): void
     {
         echo self::getPreloadLinkTags(self::getStageOneFonts());
     }
 
+    /**
+     *
+     */
     private static function renderStyleBlock(): void
     {
         printf("<style>%s</style>\n", self::getFontFaceCssCode(self::getBothStageFonts()));
     }
 
+    /**
+     *
+     */
     private static function renderScriptBlock(): void
     {
         printf(
@@ -54,6 +69,10 @@ final class Loader
         );
     }
 
+    /**
+     * @param array $fonts
+     * @return string
+     */
     private static function getPreloadLinkTags(array $fonts = []): string
     {
         $preloadLinkTagsString = '';
@@ -69,6 +88,10 @@ final class Loader
         return $preloadLinkTagsString;
     }
 
+    /**
+     * @param array $extensions
+     * @return string
+     */
     private static function getPriorityFontExtension(array $extensions = []): string
     {
         if (in_array('woff2', $extensions, true)) {
@@ -81,6 +104,10 @@ final class Loader
         return 'ttf';
     }
 
+    /**
+     * @param array $fonts
+     * @return string
+     */
     private static function getFontFaceCssCode(array $fonts): string
     {
         $fontFacesString = '';
@@ -96,6 +123,10 @@ final class Loader
         return $fontFacesString;
     }
 
+    /**
+     * @param array $font
+     * @return string
+     */
     private static function getFontSourceCssCode(array $font): string
     {
         $fontSrcString = '';
@@ -112,17 +143,28 @@ final class Loader
         return $fontSrcString;
     }
 
+    /**
+     * @return string
+     */
     private static function getScriptTemplate(): string
     {
         return '<script>(function () {%s if (!window.Promise || sessionStorage.' . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . '=true;}).catch(function(){sessionStorage.' . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
     }
 
+    /**
+     * @return string
+     */
     private static function getFontFaceObserverVendorScript(): string
     {
         $fontsFaceObserverScriptPath = dirname(__DIR__) . '/assets/fontfaceobserver.standalone.js';
         return file_get_contents($fontsFaceObserverScriptPath);
     }
 
+    /**
+     * @param array $fonts
+     * @param int $stage
+     * @return string
+     */
     private static function getFontFaceObserverJavaScriptCode(array $fonts, int $stage = 1): string
     {
         $observersString = '';
@@ -139,6 +181,12 @@ final class Loader
         return $observersString;
     }
 
+    /**
+     * @param array $fonts
+     * @param int $stage
+     * @param int|null $timeout
+     * @return string
+     */
     private static function getFontFaceChecksJavaScriptCode(array $fonts, int $stage = 1, int $timeout = null): string
     {
         $checks = '';
@@ -149,26 +197,41 @@ final class Loader
         return rtrim($checks, ',');
     }
 
+    /**
+     * @return array
+     */
     private static function getStageOneFonts(): array
     {
         return self::$settings['stage1'] ?? [];
     }
 
+    /**
+     * @return array
+     */
     private static function getStageTwoFonts(): array
     {
         return self::$settings['stage2'] ?? [];
     }
 
+    /**
+     * @return array
+     */
     private static function getBothStageFonts(): array
     {
         return array_merge(self::getStageOneFonts(), self::getStageTwoFonts());
     }
 
+    /**
+     * @return string
+     */
     private static function getFontsUrl(): string
     {
         return self::$settings['fontsUrl'];
     }
 
+    /**
+     * @return array
+     */
     private static function getStageClasses(): array
     {
         if (array_key_exists('stageClasses', self::$settings) && count(self::$settings['stageClasses']) === 2) {
@@ -180,6 +243,9 @@ final class Loader
         return self::$stageClasses;
     }
 
+    /**
+     * @return string
+     */
     private static function getSessionStorageVariable(): string
     {
         if (array_key_exists('sessionsStorageVariable', self::$settings) && ! empty(self::$settings['sessionsStorageVariable'])) {
@@ -188,6 +254,9 @@ final class Loader
         return self::$sessionsStorageVariable;
     }
 
+    /**
+     * @return bool
+     */
     private static function checkSettings(): bool
     {
         $check = true;
@@ -217,6 +286,10 @@ final class Loader
         return $check;
     }
 
+    /**
+     * @param array $font
+     * @return bool
+     */
     private static function checkFontSetting(array $font): bool
     {
         $check = true;
