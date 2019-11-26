@@ -20,7 +20,7 @@ class ComposerStaticInita96896fb94d7cca5bcf712bb56366e64
     public static $prefixDirsPsr4 = array (
         'Woda\\WordPress\\TwoStageFontsLoader\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
+            0 => __DIR__ . '/../..' . '/includes',
         ),
     );
 

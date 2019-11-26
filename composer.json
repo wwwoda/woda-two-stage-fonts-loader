@@ -34,7 +34,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Woda\\WordPress\\TwoStageFontsLoader\\": "src/"
+      "Woda\\WordPress\\TwoStageFontsLoader\\": "includes/"
     }
   }
 }

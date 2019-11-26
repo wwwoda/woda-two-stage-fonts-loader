@@ -4,12 +4,16 @@ namespace Woda\WordPress\TwoStageFontsLoader;
 
 final class Loader
 {
+    /** @var array */
     public static $settings;
+    /** @var string  */
     public static $variableBase = 'font';
+    /** @var array  */
     public static $stageClasses = [
         'fonts-1-loaded',
         'fonts-2-loaded',
     ];
+    /** @var string  */
     public static $sessionsStorageVariable = 'fontsLoaded';
 
 
@@ -69,7 +73,9 @@ final class Loader
     {
         if (in_array('woff2', $extensions, true)) {
             return 'woff2';
-        } elseif (in_array('woff', $extensions, true)) {
+        }
+
+        if (in_array('woff', $extensions, true)) {
             return 'woff';
         }
         return 'ttf';
@@ -108,7 +114,7 @@ final class Loader
 
     private static function getScriptTemplate(): string
     {
-        return "<script>(function () {%s if (!window.Promise || sessionStorage." . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . "=true;}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
+        return '<script>(function () {%s if (!window.Promise || sessionStorage.' . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . '=true;}).catch(function(){sessionStorage.' . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
     }
 
     private static function getFontFaceObserverVendorScript(): string
@@ -283,4 +289,3 @@ final class Loader
         return $check;
     }
 }
-
