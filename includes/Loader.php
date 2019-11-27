@@ -29,7 +29,7 @@ final class Loader
     }
 
     /**
-     *
+     * Function to be executed on wp_head action hook
      */
     public static function renderFontsLoaderBlock(): void
     {
@@ -39,37 +39,66 @@ final class Loader
     }
 
     /**
-     *
+     * Renders all <link> elements for preloading the stage one fonts
      */
     private static function renderPreloadLinksBlock(): void
     {
-        echo self::getPreloadLinkTags(self::getStageOneFonts());
+        echo self::getPreloadLinkTags(self::getStageOneFontConfigs());
     }
 
     /**
-     *
+     * Renders the <style> block containing all @font-face rules
      */
     private static function renderStyleBlock(): void
     {
-        printf("<style>%s</style>\n", self::getFontFaceCssCode(self::getBothStageFonts()));
+        printf("<style>%s</style>\n", self::getFontFaceCssCode(self::getMergedFontConfigs()));
     }
 
     /**
-     *
+     * Renders the <script> block containing the font face observer vendor script and the two stage font loader logic
      */
     private static function renderScriptBlock(): void
     {
         printf(
-            self::getScriptTemplate(),
+            '<script type="text/javascript">' .
+            // Setup a self-invoking function and inject the font face observer vendor code first
+            '(function(){%1$s' .
+            // If the browser doesn't support Promises or the fonts have already been loaded in the current session
+            // add both loaded classes to <html>
+            'if(!window.Promise||sessionStorage.%6$s===true){document.documentElement.className+=\' %7$s %8$s\'}' .
+            // Else setup the stage one font face observers
+            'else{%2$s' .
+            // Load the stage one fonts
+            'Promise.all([%3$s]).then(function(){' .
+            // Add the stage one loaded class to <html>
+            'document.documentElement.className+=\' %7$s\';' .
+            // Setup the stage two font face observers
+            '%4$s' .
+            // Load the stage two fonts
+            'Promise.all([%5$s]).then(function(){' .
+            // Add the stage two loaded class to <html> and udpate the session storage as fonts can be loaded from the
+            // cache on future page loads in the current sesssion.
+            'document.documentElement.className+=\' %8$s\';sessionStorage.%6$s=true})' .
+            // In case of error while loading the stage two fonts add both loaded classes to <html>
+            '.catch(function(){sessionStorage.%6$s=false;document.documentElement.className+=\' %7$s %8$s\'})' .
+            '})' .
+            // In case of error while loading the stage one fonts add both loaded classes to <html>
+            '.catch(function(){sessionStorage.%6$s=false;document.documentElement.className+=\' %7$s %8$s\'})' .
+            '}})();</script>',
             self::getFontFaceObserverVendorScript(),
-            self::getFontFaceObserverJavaScriptCode(self::getStageOneFonts()),
-            self::getFontFaceChecksJavaScriptCode(self::getStageOneFonts()),
-            self::getFontFaceObserverJavaScriptCode(self::getStageTwoFonts(), 2),
-            self::getFontFaceChecksJavaScriptCode(self::getStageTwoFonts(), 2)
+            self::getFontFaceObserverJavaScriptCode(self::getStageOneFontConfigs()),
+            self::getFontFaceChecksJavaScriptCode(self::getStageOneFontConfigs()),
+            self::getFontFaceObserverJavaScriptCode(self::getStageTwoFontConfigs(), 2),
+            self::getFontFaceChecksJavaScriptCode(self::getStageTwoFontConfigs(), 2),
+            self::getSessionStorageVariable(),
+            self::getStageClasses()[0],
+            self::getStageClasses()[1]
         );
     }
 
     /**
+     * Create a list of <link> elements for preloading the stage one fonts
+     *
      * @param array $fonts
      * @return string
      */
@@ -89,6 +118,8 @@ final class Loader
     }
 
     /**
+     * Prioritize the most modern font format
+     *
      * @param array $extensions
      * @return string
      */
@@ -105,6 +136,8 @@ final class Loader
     }
 
     /**
+     * Create @font-face css rules for a collection of fonts
+     *
      * @param array $fonts
      * @return string
      */
@@ -124,6 +157,8 @@ final class Loader
     }
 
     /**
+     * Combine a url() and format() function to create the value for a @font-face src: descriptor
+     *
      * @param array $font
      * @return string
      */
@@ -144,14 +179,8 @@ final class Loader
     }
 
     /**
-     * @return string
-     */
-    private static function getScriptTemplate(): string
-    {
-        return '<script>(function () {%s if (!window.Promise || sessionStorage.' . self::getSessionStorageVariable() . ") {document.documentElement.className += ' " . self::getStageClasses()[0] . ' ' . self::getStageClasses()[1] . "';} else {%sPromise.all([%s]).then(function () { document.documentElement.className += ' " . self::getStageClasses()[0] . "';%sPromise.all([%s]).then(function(){document.documentElement.className+=' " . self::getStageClasses()[1] . "';sessionStorage." . self::getSessionStorageVariable() . '=true;}).catch(function(){sessionStorage.' . self::getSessionStorageVariable() . "=false;document.documentElement.className+=' fonts-1-loaded fonts-2-loaded';});}).catch(function(){sessionStorage." . self::getSessionStorageVariable() . "=false;document.documentElement.classNam+=' fonts-1-loaded fonts-2-loaded';});}})();</script>";
-    }
-
-    /**
+     * Returns the js code for the font face observer vendor script
+     *
      * @return string
      */
     private static function getFontFaceObserverVendorScript(): string
@@ -161,6 +190,8 @@ final class Loader
     }
 
     /**
+     * Create a list of font face observers for a specific stage
+     *
      * @param array $fonts
      * @param int $stage
      * @return string
@@ -182,6 +213,8 @@ final class Loader
     }
 
     /**
+     * Create a list of font face loaders for a specific stage
+     *
      * @param array $fonts
      * @param int $stage
      * @param int|null $timeout
@@ -200,7 +233,7 @@ final class Loader
     /**
      * @return array
      */
-    private static function getStageOneFonts(): array
+    private static function getStageOneFontConfigs(): array
     {
         return self::$settings['stage1'] ?? [];
     }
@@ -208,7 +241,7 @@ final class Loader
     /**
      * @return array
      */
-    private static function getStageTwoFonts(): array
+    private static function getStageTwoFontConfigs(): array
     {
         return self::$settings['stage2'] ?? [];
     }
@@ -216,9 +249,9 @@ final class Loader
     /**
      * @return array
      */
-    private static function getBothStageFonts(): array
+    private static function getMergedFontConfigs(): array
     {
-        return array_merge(self::getStageOneFonts(), self::getStageTwoFonts());
+        return array_merge(self::getStageOneFontConfigs(), self::getStageTwoFontConfigs());
     }
 
     /**
@@ -255,29 +288,31 @@ final class Loader
     }
 
     /**
+     * Checks the main settings passed to the plugin and gives feedback when incorrectly set up
+     *
      * @return bool
      */
     private static function checkSettings(): bool
     {
         $check = true;
 
-        if (count(self::getStageOneFonts()) < 1) {
+        if (count(self::getStageOneFontConfigs()) < 1) {
             trigger_error('No font settings found for stage 1', E_USER_NOTICE);
             $check = false;
         }
 
-        if (count(self::getStageTwoFonts()) < 1) {
+        if (count(self::getStageTwoFontConfigs()) < 1) {
             trigger_error('No font settings found for stage 2', E_USER_NOTICE);
             $check = false;
         }
 
-        foreach (self::getStageOneFonts() as $font) {
+        foreach (self::getStageOneFontConfigs() as $font) {
             if (self::checkFontSetting($font) === false) {
                 $check = false;
             }
         }
 
-        foreach (self::getStageTwoFonts() as $font) {
+        foreach (self::getStageTwoFontConfigs() as $font) {
             if (self::checkFontSetting($font) === false) {
                 $check = false;
             }
@@ -287,6 +322,8 @@ final class Loader
     }
 
     /**
+     * Checks the font settings passed to the plugin and gives feedback when incorrectly set up
+     *
      * @param array $font
      * @return bool
      */
