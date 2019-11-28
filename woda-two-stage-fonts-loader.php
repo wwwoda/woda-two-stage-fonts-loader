@@ -29,6 +29,9 @@ include_once 'vendor/autoload.php';
 
 add_action('init', static function (): void {
     $settings = apply_filters('woda_two_stage_fonts_loader_settings', []);
+    if (count($settings) < 1) {
+        return;
+    }
     Loader::register($settings);
 });
 
@@ -41,3 +44,16 @@ if (!empty($githubAccessToken)) {
     );
     $pluginUpdateChecker->setAuthentication($githubAccessToken);
 }
+
+add_action('admin_notices', static function (): void {
+    $settings = apply_filters('woda_two_stage_fonts_loader_settings', []);
+    if (count($settings) > 0) {
+        return;
+    }
+    printf(
+        '<div class="notice error"><p>%s <a target="_blank" href="%s">%s</a></p></div>',
+        'Two Stage Fonts Loader is not active as long as you haven\'t registered settings.',
+        'https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader/wiki',
+        'Look here for usage information.'
+    );
+});
