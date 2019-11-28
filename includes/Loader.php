@@ -297,12 +297,12 @@ final class Loader
         $check = true;
 
         if (count(self::getStageOneFontConfigs()) < 1) {
-            trigger_error('No font settings found for stage 1', E_USER_NOTICE);
+            self::triggerError('No font settings found for stage 1');
             $check = false;
         }
 
         if (count(self::getStageTwoFontConfigs()) < 1) {
-            trigger_error('No font settings found for stage 2', E_USER_NOTICE);
+            self::triggerError('No font settings found for stage 2');
             $check = false;
         }
 
@@ -357,45 +357,60 @@ final class Loader
         ];
 
         if (! array_key_exists('name', $font) || empty($font['name'])) {
-            trigger_error('Font name missing', E_USER_NOTICE);
+            self::triggerError('Font name missing');
             $check = false;
         }
 
         if (! array_key_exists('filename', $font) || empty($font['filename'])) {
-            trigger_error('Font file name missing name', E_USER_NOTICE);
+            self::triggerError('Font file name missing name');
             $check = false;
         }
 
         if (! array_key_exists('extensions', $font)) {
-            trigger_error('Font extension missing', E_USER_NOTICE);
+            self::triggerError('Font extension missing');
             $check = false;
         } elseif (! is_array($font['extensions'])) {
-            trigger_error('Font file extensions need to be an array', E_USER_NOTICE);
+            self::triggerError('Font file extensions need to be an array');
             $check = false;
         } elseif (count(array_intersect($font['extensions'], $allowedFontFamilies)) < 1) {
-            trigger_error('Font file extensions array needs to contain either woff, woff2, ttf or any combination of these', E_USER_NOTICE);
+            self::triggerError('Font file extensions array needs to contain either woff, woff2, ttf or any combination of these');
             $check = false;
         } elseif (count(array_diff($font['extensions'], $allowedFontFamilies)) < 0) {
-            trigger_error('Font file extensions array contains unkonwn extensions (allowed: ttf, woff, woff2)', E_USER_NOTICE);
+            self::triggerError('Font file extensions array contains unkonwn extensions (allowed: ttf, woff, woff2)');
             $check = false;
         }
 
         if (! array_key_exists('italic', $font)) {
-            trigger_error('Font italic setting missing', E_USER_NOTICE);
+            self::triggerError('Font italic setting missing');
             $check = false;
         } elseif (! is_bool($font['italic'])) {
-            trigger_error('Font italic setting is not a boolean', E_USER_NOTICE);
+            self::triggerError('Font italic setting is not a boolean');
             $check = false;
         }
 
         if (! array_key_exists('weight', $font) || empty($font['weight'])) {
-            trigger_error('Font weight setting missing', E_USER_NOTICE);
+            self::triggerError('Font weight setting missing');
             $check = false;
         } elseif (! in_array($font['weight'], $allowedFontWeights, true)) {
-            trigger_error($font['weight'] . ' is an illegal font weight', E_USER_NOTICE);
+            self::triggerError($font['weight'] . ' is an illegal font weight');
             $check = false;
         }
 
         return $check;
+    }
+
+    /**
+     * Trigger errors only if Query Monitor is activated
+     *
+     * @param $msg
+     * @param int $errorType
+     */
+    private static function triggerError($msg, $errorType = E_USER_NOTICE): void
+    {
+        if (class_exists('QM_Activation') === false) {
+            return;
+        }
+
+        trigger_error($msg, $errorType);
     }
 }
