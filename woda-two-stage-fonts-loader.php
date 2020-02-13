@@ -32,7 +32,7 @@ add_action('init', static function (): void {
     Loader::register($settings);
 });
 
-$githubAccessToken = get_option('woda_admin_option_github_access_token');
+$githubAccessToken  = defined( 'GITHUB_ACCESS_TOKEN' ) ? GITHUB_ACCESS_TOKEN : get_option('woda_github_access_token');
 if (!empty($githubAccessToken)) {
     $pluginUpdateChecker = \Puc_v4_Factory::buildUpdateChecker(
         'https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader/',

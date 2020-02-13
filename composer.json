@@ -30,7 +30,7 @@
     "source": "https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader"
   },
   "require": {
-    "yahnis-elsts/plugin-update-checker": "^4.8"
+    "yahnis-elsts/plugin-update-checker": "^4.9"
   },
   "autoload": {
     "psr-4": {

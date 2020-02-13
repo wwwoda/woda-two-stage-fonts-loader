@@ -29,4 +29,9 @@ Markdown parsed.
 = 0.1.2 =
 * Trigger error only if Query Monitor Plugin is activated
 
+= 0.2.0 =
+* Update GitHub updater to 4.9 to use Authorization HTTP header instead as using the `access_token` query parameter is deprecated and will be removed July 1st, 2020.
+* Use constant GITHUB_ACCESS_TOKEN for updater if available
+* Change fallback option key to woda_github_access_token
+
 `<?php code(); // goes in backticks ?>`
