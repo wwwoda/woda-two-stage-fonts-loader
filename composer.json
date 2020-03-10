@@ -1,5 +1,5 @@
 {
-  "name": "woda/wp-two-stage-font-loader",
+  "name": "woda/two-stage-font-loader",
   "description": "This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.",
   "keywords": [
     "wordpress",
@@ -8,7 +8,7 @@
     "fonts"
   ],
   "license": "GPLv2 or later",
-  "homepage": "https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader",
+  "homepage": "https://github.com/wwwoda/woda-two-stage-fonts-loader",
   "authors": [
     {
       "name": "Woda",
@@ -26,8 +26,8 @@
   ],
   "type": "wordpress-plugin",
   "support": {
-    "issues": "https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader/issues",
-    "source": "https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader"
+    "issues": "https://github.com/wwwoda/woda-two-stage-fonts-loader/issues",
+    "source": "https://github.com/wwwoda/woda-two-stage-fonts-loader"
   },
   "require": {
     "yahnis-elsts/plugin-update-checker": "^4.9"

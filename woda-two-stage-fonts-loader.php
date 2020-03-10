@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Woda Two Stage Fonts Loader
- * Plugin URI:        https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader
+ * Plugin URI:        https://github.com/wwwoda/woda-two-stage-fonts-loader
  * Description:       ...
  * Version:           0.3.1
  * Author:            Woda
@@ -10,9 +10,10 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.html
  * Domain Path:       /languages
  * Text Domain:       woda-scripts-styles-loader
- * GitHub Plugin URI: https://github.com/wwwoda/wp-plugin-two-stage-fonts-loader
+ * GitHub Plugin URI: https://github.com/wwwoda/woda-two-stage-fonts-loader
+ * Release Asset:     true
  *
- * @package           Woda_Two_Stage-Fonts_Loader
+ * @package           Woda_Two_Stage_Fonts_Loader
  */
 
 // Copyright (c) 2019 Woda Digital OG. All rights reserved.
