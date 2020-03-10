@@ -3,7 +3,7 @@
  * Plugin Name:       Woda Two Stage Fonts Loader
  * Plugin URI:        https://github.com/wwwoda/woda-two-stage-fonts-loader
  * Description:       ...
- * Version:           0.3.1
+ * Version:           0.3.2
  * Author:            Woda
  * Author URI:        https://www.woda.at
  * License:           GNU General Public License v2
