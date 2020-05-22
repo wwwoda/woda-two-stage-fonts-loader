@@ -3,9 +3,9 @@ Contributors: @davidmondok
 Tags: fonts, performance
 Requires at least: 4.5
 Tested up to: 5.3
-Stable tag: 0.3.2
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 0.4.0
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.
 
@@ -39,5 +39,8 @@ Markdown parsed.
 
 = 0.3.1 =
 * Fix GitHub Plugin URI
+
+= 0.4.0 =
+* Rewritten from the ground up
 
 `<?php code(); // goes in backticks ?>`
