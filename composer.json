@@ -1,5 +1,6 @@
 {
   "name": "woda/wp-two-stage-fonts-loader",
+  "type": "wordpress-plugin",
   "description": "This WordPress plugin provides a simple way for developers to implement a performant two stage font loading strategy.",
   "keywords": [
     "wordpress",
@@ -24,17 +25,61 @@
       "email": "wolfgang@woda.at"
     }
   ],
-  "type": "wordpress-plugin",
   "support": {
     "issues": "https://github.com/wwwoda/woda-two-stage-fonts-loader/issues",
     "source": "https://github.com/wwwoda/woda-two-stage-fonts-loader"
   },
-  "require": {
-    "php": ">=7.2.0"
-  },
   "autoload": {
     "psr-4": {
-      "Woda\\WordPress\\TwoStageFontsLoader\\": "includes/"
+      "Woda\\WordPress\\TwoStageFontsLoader\\": "includes"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Woda\\Test\\WordPress\\TwoStageFontsLoader\\": "test"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ],
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "10up/wp_mock": "^0.4.2",
+    "eventjet/coding-standard": "^3.1",
+    "maglnet/composer-require-checker": "^2.1",
+    "phpstan/extension-installer": "^1.0",
+    "phpstan/phpstan": "^0.12.25",
+    "phpstan/phpstan-mockery": "^0.12.5",
+    "roots/wordpress": "^5.4",
+    "szepeviktor/phpstan-wordpress": "^0.6.0"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "wordpress-install-dir": "vendor/wordpress/wordpress",
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    }
+  },
+  "scripts": {
+    "check": [
+      "@check-deps",
+      "@cs-check",
+      "@phpstan",
+      "@phpunit"
+    ],
+    "check-deps": "vendor/bin/composer-require-checker check --config-file=require-checker.config.json",
+    "cs-check": "vendor/bin/phpcs",
+    "cs-fix": "vendor/bin/phpcbf",
+    "phpstan": "vendor/bin/phpstan analyse",
+    "phpunit": "vendor/bin/phpunit"
   }
 }
