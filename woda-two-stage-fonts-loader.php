@@ -3,7 +3,7 @@
  * Plugin Name:       Woda Two Stage Fonts Loader
  * Plugin URI:        https://github.com/wwwoda/woda-two-stage-fonts-loader
  * Description:       ...
- * Version:           0.4.0
+ * Version:           1.0.0
  * Author:            Woda
  * Author URI:        https://www.woda.at
  * License:           GPLv3
@@ -30,5 +30,3 @@
 namespace Woda\WordPress\TwoStageFontsLoader;
 
 include_once 'vendor/autoload.php';
-
-Init::init();

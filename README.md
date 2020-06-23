@@ -10,43 +10,105 @@ You can install the plugin by uploading it in the WordPress Admin or via `compos
 composer require woda/wp-two-stage-fonts-loader
 ```
 
-If you installed the plugin via `composer` you will have to initialize it yourself to be able to use it. Add this to your theme's function file.
-
-```php
-Woda\WordPress\TwoStageFontsLaoder\Init::init($settings);
-```
-
 ## Configure
 
-Pass the settings to the init function or hook into the supplied filter
+Creating fonts
 
 ```php
 use Woda\WordPress\TwoStageFontsLoader\Font;
 
-add_filter('woda_two_stage_fonts_loader_settings', static function($settings) {
-    return [
-        // (string) Directory URI to the location of the font files
-        'fontsDirUrl' => get_stylesheet_directory_uri() . 'assets/dist/fonts',
-        // (array) Collectiom of font configurations to be loaded in the first stage
-        'stage1' => [
-            new Font('Open Sans Initial', 'open-sans-regular'),
-            new Font('Montserrat', 'montserrat-700', '700'),
+
+new Font(
+     // @param string   $name   Font family name for font face.
+    'Open Sans Initial',
+     // @param string[] $urls   Array of font file URLs. Valid font files are 'woff2', 'woff' and 'ttf'.
+    [
+        get_stylesheet_directory_uri() . 'assets/dist/fonts/open-sans-regular.woff2',
+        get_stylesheet_directory_uri() . 'assets/dist/fonts/open-sans-regular.woff',
+    ],
+     // @param string   $weight Valid weights are 'normal', 'bold', 'lighter', 'bolder', '1', '100', '100.6', '123',
+     //                         '200', '300', '321', '400', '500', '600', '700', '800', '900', '1000'. Default '400'
+    'bold',
+     // @param bool     $italic True for italic font faces. Default false.
+    true
+);
+```
+
+Set up a loader, add fonts and register it to render everything in <head>`
+
+```php
+use Woda\WordPress\TwoStageFontsLoader\Font;
+use Woda\WordPress\TwoStageFontsLoader\Loader;
+
+define('FONTS_URL', get_stylesheet_directory_uri() . 'assets/dist/fonts');
+
+// Create a new Loader
+(new Loader())
+    // Add fonts to the first stage via the method addStage1Font() 
+    ->addStage1Font(new Font(
+        'Open Sans Initial',
+        [
+            FONTS_URL . '/open-sans-regular.woff2',
+            FONTS_URL . '/open-sans-regular.woff',
+        ]
+    ))
+    ->addStage1Font(new Font(
+        'Montserrat',
+        [
+            FONTS_URL . '/montserrat-regular.woff2',
+            FONTS_URL . '/montserrat-regular.woff',
+        ]
+    ))
+    // Add fonts to the second stage via the method addStage2Font() 
+    ->addStage2Font(new Font(
+        'Open Sans',
+        [
+            WODA_FONTS_URL . '/open-sans-regular.woff2',
+            WODA_FONTS_URL . '/open-sans-regular.woff',
+        ]
+    ))
+    ->addStage2Font(new Font(
+        'Open Sans',
+        [
+            WODA_FONTS_URL . '/open-sans-bold.woff2',
+            WODA_FONTS_URL . '/open-sans-bold.woff',
         ],
-        // (array) Collection of font configurations to be loaded in the second stage
-        'stage2' => [
-            new Font('Open Sans', 'open-sans-regular'),
-            new Font('Open Sans', 'open-sans-bold', 'bold'),
-            new Font('Open Sans', 'open-sans-bold-italic', 'bold', true),
-            new Font('Open Sans Condensed', 'open-sans-condensed-regular'),
+        'bold'
+    ))
+    ->addStage2Font(new Font(
+        'Open Sans',
+        [
+            WODA_FONTS_URL . '/open-sans-bold-italic.woff2',
+            WODA_FONTS_URL . '/open-sans-bold-italic.woff',
         ],
-        // (string) This class will be applied to <html> when the first stage finished
-        'classStage1' => 'fonts-loaded-stage1',
-        // (string) This class will be applied to <html> when the second stage finished
-        'classStage2' => 'fonts-loaded-stage2',
-        // (bool) Preload the fonts from the first stage
-        'preloadStage1' => false,
-    ];
-}, 10, 1);
+        'bold',
+        true
+    ))
+    ->addStage2Font(new Font(
+        'Open Sans Condensed',
+        [
+            WODA_FONTS_URL . '/open-sans-condensed-regular.woff2',
+            WODA_FONTS_URL . '/open-sans-condensed-regular.woff',
+        ]
+    ))
+    // Call register() to render everything in <head>
+    ->register();
+```
+
+Change the configuration
+
+```php
+(new Loader())
+    // Don't preload stage one fonts
+    ->disablePreloaders()
+    // Change the stage one class added to <html>
+    ->setStage1Class('fout-stage-1')
+    // Change the stage two class added to <html>
+    ->setStage2Class('fout-stage-2')
+    ->addStage1Font(...)
+    ->addStage2Font(...)
+    // Call register() to render everything in <head>
+    ->register();
 ```
 
 ## How to use
